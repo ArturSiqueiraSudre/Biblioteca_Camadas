@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal do Leitor</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #F8F9FA; color: #212529; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { background: #4A3BCE; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .btn { background: #4A3BCE; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn:hover { background: #382bad; }
+        .minhas-alocacoes { margin-top: 40px; border-top: 2px solid #dee2e6; padding-top: 20px; }
+        .tag-livraria { font-size: 0.8rem; color: #6c757d; background: #e9ecef; padding: 3px 8px; border-radius: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Bem-vindo, {{ usuario }}</h2>
+            <p>Encontre livros em livrarias parceiras e faca sua alocacao.</p>
+        </div>
+
+        <h3>Catalogo Disponivel nas Livrarias</h3>
+        
+        {% for id_livro, titulo, livraria in catalogo %}
+        <div class="card">
+            <div>
+                <strong>{{ titulo }}</strong><br>
+                <span class="tag-livraria">Local: {{ livraria }}</span>
+            </div>
+            <form method="POST" action="/" style="margin: 0;">
+                <input type="hidden" name="livro_id" value="{{ id_livro }}">
+                <button type="submit" class="btn">Alocar Livro</button>
+            </form>
+        </div>
+        {% endfor %}
+
+        <div class="minhas-alocacoes">
+            <h3>Meus Livros Alocados</h3>
+            {% for titulo, livraria in meus_livros %}
+            <div class="card" style="background: #eef2ff;">
+                <div>
+                    <strong>Livro: {{ titulo }}</strong><br>
+                    <span class="tag-livraria" style="background: white;">Retirar em: {{ livraria }}</span>
+                </div>
+            </div>
+            {% else %}
+            <p style="color: #6c757d;">Voce ainda nao alocou nenhum livro.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
