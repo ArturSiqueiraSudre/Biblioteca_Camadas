@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal do Leitor - Arquitetura Limpa</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #F8F9FA; color: #212529; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { background: #4A3BCE; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .btn { background: #4A3BCE; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn:hover { background: #382bad; }
+        .btn-remover { background: #dc3545; }
+        .btn-remover:hover { background: #c82333; }
+        .tag-livraria { font-size: 0.8rem; color: #6c757d; background: #e9ecef; padding: 3px 8px; border-radius: 12px; }
+        .alert { padding: 10px; margin-bottom: 15px; border-radius: 4px; font-weight: bold; }
+        .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .secao { margin-top: 40px; border-top: 2px solid #dee2e6; padding-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Bem-vindo, {{ usuario }}</h2>
+            <p>Encontre livros no catálogo e gerencie sua cesta de empréstimos.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <h3>Catálogo Disponível</h3>
+        {% for livro in catalogo %}
+        <div class="card">
+            <div>
+                <strong>{{ livro.titulo }}</strong><br>
+                <span class="tag-livraria">Local: {{ livro.livraria }}</span>
+            </div>
+            <form method="POST" action="{{ url_for('biblioteca.adicionar_a_cesta') }}" style="margin: 0;">
+                <input type="hidden" name="livro_id" value="{{ livro.id }}">
+                <button type="submit" class="btn">Adicionar à Cesta</button>
+            </form>
+        </div>
+        {% else %}
+        <p style="color: #6c757d;">O catálogo está vazio no momento.</p>
+        {% endfor %}
+
+        <div class="secao">
+            <h3>Minha Cesta de Empréstimos</h3>
+            {% for livro in cesta %}
+            <div class="card" style="background: #eef2ff;">
+                <div>
+                    <strong>{{ livro.titulo }}</strong><br>
+                    <span class="tag-livraria" style="background: white;">Retirar em: {{ livro.livraria }}</span>
+                </div>
+                <form method="POST" action="{{ url_for('biblioteca.remover_da_cesta') }}" style="margin: 0;">
+                    <input type="hidden" name="livro_id" value="{{ livro.id }}">
+                    <button type="submit" class="btn btn-remover">Remover</button>
+                </form>
+            </div>
+            {% else %}
+            <p style="color: #6c757d;">Sua cesta está vazia. Adicione até 3 livros.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
