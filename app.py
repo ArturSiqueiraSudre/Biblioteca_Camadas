@@ -1,8 +1,7 @@
 
 from flask import Flask
 
-# A única coisa que o app.py precisa conhecer é o Controller.
-# Ele não importa Serviços, não importa Repositórios e não importa Domínio.
+
 from Controller.biblioteca_controller import biblioteca_bp
 
 def create_app():
